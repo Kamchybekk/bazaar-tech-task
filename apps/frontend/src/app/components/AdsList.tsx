@@ -3,9 +3,7 @@ import axios from 'axios';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import {
   Box,
-  CircularProgress,
   TextField,
-  Button,
   FormControl,
   InputLabel,
   Select,
@@ -13,11 +11,14 @@ import {
   styled,
   Grid,
   debounce,
+  SelectChangeEvent,
 } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdCard from './UI/Card';
 import { Ad } from './UI/typesCard';
+import Link from 'next/link';
+import LoadingSpinner from './UI/LoadingSpinner';
 
 interface AdResponse {
   page: number;
@@ -81,8 +82,16 @@ const Index = () => {
     }));
   };
 
+  const handleSelectChange = (event: SelectChangeEvent<string | null>) => {
+    const name = event.target.name as keyof Filters;
+    const value = event.target.value;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
   const fetchAds = async (filters: Filters) => {
-    console.log('DONE FETCH ADS');
     setIsLoading(true);
     try {
       const { data } = await axios.get<AdResponse>(`/api/ads`, {
@@ -112,6 +121,9 @@ const Index = () => {
   return (
     <Container>
       <ToastContainer />
+      <div className="container-logo">
+        <Logo src="https://bazaarorigin.com/assets/icons/logo2.svg" />
+      </div>
       <BlockFieldsForFilter>
         <div className="price-city-district-block">
           <TextField
@@ -133,7 +145,7 @@ const Index = () => {
                 name="city"
                 value={filters.city}
                 label="City"
-                onChange={handleFilterChange}
+                onChange={handleSelectChange}
                 size="small"
               >
                 <MenuItem value="All">All</MenuItem>
@@ -175,22 +187,20 @@ const Index = () => {
 
       <Box alignContent="center">
         {isLoading ? (
-          <LoadingContainer>
-            <CircularProgress />
-          </LoadingContainer>
+          <LoadingSpinner />
         ) : (
           <ContainerAds adsCount={ads?.results.length || 0}>
             {ads?.results?.map((ad: Ad) => (
-              <Grid item xs={12} sm={6} md={4} key={ad.id}>
-                <AdCard ad={ad} />
-              </Grid>
+              <Link href={`/${ad.id}`}>
+                <Grid item xs={12} sm={6} md={4} key={ad.id}>
+                  <AdCard ad={ad} />
+                </Grid>
+              </Link>
             ))}
           </ContainerAds>
         )}
         {!isLoading && ads?.results.length === 0 ? (
-          <LoadingContainer>
-            <strong className="not-found-text">Nothing was found</strong>
-          </LoadingContainer>
+          <strong className="not-found-text">Nothing was found</strong>
         ) : null}
       </Box>
     </Container>
@@ -201,6 +211,10 @@ export default Index;
 
 const Container = styled('div')`
   padding: 30px 80px;
+  .container-logo {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const ContainerAds = styled('div')<{ adsCount: number }>`
@@ -209,13 +223,6 @@ const ContainerAds = styled('div')<{ adsCount: number }>`
   padding-left: ${({ adsCount }) => (adsCount < 3 ? '25px' : '')};
   flex-wrap: wrap;
   gap: 35px;
-`;
-
-const LoadingContainer = styled('div')`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  height: 100vh;
 `;
 
 const BlockFieldsForFilter = styled('div')`
@@ -238,4 +245,8 @@ const BlockFieldsForFilter = styled('div')`
     width: 110vw;
     gap: 10px;
   }
+`;
+
+const Logo = styled('img')`
+  width: 200px;
 `;

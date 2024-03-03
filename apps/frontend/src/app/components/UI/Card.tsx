@@ -1,24 +1,19 @@
 import React from 'react';
-import {
-  Box,
-  CardActionArea,
-  CardContent,
-  Typography,
-  styled,
-} from '@mui/material';
+import { Box, CardContent, Typography, styled } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { AdCardProps } from './typesCard';
 
 const AdCard: React.FC<AdCardProps> = ({ ad }) => {
-  const truncateDescription = (description: string | undefined) => {
+  const truncateDescription = (description: string) => {
     const maxLength = 50;
     if (description.length > maxLength) {
       return `${description.substring(0, maxLength)}...`;
     }
     return description;
   };
+
   return (
     <StyledCard>
       {ad?.images.slice(0, 1).map((image) => (
@@ -71,7 +66,9 @@ const AdCard: React.FC<AdCardProps> = ({ ad }) => {
             </Typography>
           </div>
           <div className="price">
-            <strong className="price">{ad.price.toLocaleString()} THB</strong>
+            {ad.price ? (
+              <strong className="price">{ad.price.toLocaleString()} THB</strong>
+            ) : null}
             <ArrowForwardIcon sx={{ mr: 0.5 }} />
           </div>
         </ExtraInfo>
@@ -88,20 +85,26 @@ const StyledCard = styled('div')`
   display: flex;
   flex-direction: column;
   min-height: 400px;
-  box-shadow: 0px 4px 8px -4px rgba(66, 68, 90, 1);
+  transition: 0.3s;
+  -webkit-box-shadow: 0px 4px 27px -14px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 4px 27px -14px rgba(66, 68, 90, 1);
+  box-shadow: 0px 4px 27px -14px rgba(66, 68, 90, 1);
+  :hover {
+    -webkit-box-shadow: 0px 4px 27px -6px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 0px 4px 27px -6px rgba(66, 68, 90, 1);
+    box-shadow: 0px 4px 27px -6px rgba(66, 68, 90, 1);
+  }
 `;
 
-const Image = styled('div')<{ image: string; alt?: string }>(
-  ({ theme, image }) => ({
-    width: '100%',
-    height: 160,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundImage: `url(${image})`,
-    borderTopRightRadius: '15px',
-    borderTopLeftRadius: '15px',
-  })
-);
+const Image = styled('div')<{ image: string; alt?: string }>(({ image }) => ({
+  width: '100%',
+  height: 160,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundImage: `url(${image})`,
+  borderTopRightRadius: '15px',
+  borderTopLeftRadius: '15px',
+}));
 
 const ExtraInfo = styled('div')`
   .price-location-block {
