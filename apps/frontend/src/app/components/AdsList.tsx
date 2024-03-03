@@ -191,7 +191,7 @@ const Index = () => {
         ) : (
           <ContainerAds adsCount={ads?.results.length || 0}>
             {ads?.results?.map((ad: Ad) => (
-              <Link href={`/${ad.id}`}>
+              <Link href={`/ads/${ad.id}`}>
                 <Grid item xs={12} sm={6} md={4} key={ad.id}>
                   <AdCard ad={ad} />
                 </Grid>
