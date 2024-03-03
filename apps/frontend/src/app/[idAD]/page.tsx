@@ -9,6 +9,8 @@ import LoadingSpinner from '../components/UI/LoadingSpinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { formatDate } from '../helpers/general';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Link from 'next/link';
 
 interface Image {
   id: number;
@@ -57,6 +59,10 @@ const AdDetailPage = () => {
         <LoadingSpinner />
       ) : (
         <MainData>
+          <Link className="button-go-back" href="/">
+            <ArrowBackIosIcon />
+            Назад
+          </Link>
           <ImageList sx={{ width: 500, height: 350 }} cols={3} rowHeight={164}>
             {adDetails?.images?.map((image) => (
               <ImageListItem key={image.id}>
@@ -122,6 +128,10 @@ const Container = styled('div')`
   ul {
     padding: 0;
     list-style: none;
+  }
+  .button-go-back {
+    display: flex;
+    align-items: center;
   }
 `;
 
