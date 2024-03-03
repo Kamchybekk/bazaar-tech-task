@@ -5,10 +5,10 @@ import axios from 'axios';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { Typography, styled } from '@mui/material';
-import LoadingSpinner from '../components/UI/LoadingSpinner';
+import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { formatDate } from '../helpers/general';
+import { formatDate } from '../../helpers/general';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Link from 'next/link';
 
